@@ -4,11 +4,22 @@
         {% load static %}
         <link rel="stylesheet" href="{% static 'socialapp/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'socialapp/bootstrap-theme.min.css' %}" > 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </head>
     <body>
-        <h1> Home </h1>
+        <h1> Post Wall </h1>
         <hr>
         <a href="{% url 'socialapp:logout_user' %}" class="btn btn-info" role="button">Logout</a>
+
+        <span class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Create Post
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a href="{% url 'socialapp:create_post'  type_id='MessagePost' %}">Message</a></li>
+            </ul>
+          </span>
+
         <hr>
     </body>
 </html>

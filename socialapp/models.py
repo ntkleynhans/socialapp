@@ -15,10 +15,10 @@ class Post(models.Model):
             resource_link - file name to JSON data object
     """
     post_date = models.DateTimeField('published date')
-    user = models.ForeignKey(User)
-    resource_link = model.CharField()
+    user = models.CharField(max_length=32)
+    resource_link = models.CharField(max_length=128)
+    post_type = models.CharField(max_length=32)
 
     def __str__(self):
-        return "{} -- {} {} -- {}".format(self.user.first_name,
-            self.user.last_name, self.post_date.strftime("%A, %d %B %Y"))
+        return "{} -- {} -- {}".format(self.user, self.post_type, self.post_date.strftime("%A, %d %B %Y"))
 

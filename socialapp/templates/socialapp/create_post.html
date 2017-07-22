@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <title> Social Media App </title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'socialapp/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'socialapp/bootstrap-theme.min.css' %}" > 
+    </head>
+    <body>
+        <h1> Create Post </h1>
+        <hr>
+        <a href="{% url 'socialapp:logout_user' %}" class="btn btn-info" role="button">Logout</a>
+        <a href="{% url 'socialapp:wall' %}" class="btn btn-info" role="button">Cancel</a>
+        <hr>
+
+        {% if error_message %}
+            <div class="alert alert-warning">
+                <strong>{{ error_message|safe }}</strong>
+            </div>
+        {% endif %}
+
+        <form action="{% url 'socialapp:save_post' type_id='MessagePost' %}" method="post" class="form-horizontal">
+            {% csrf_token %}
+
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="title">Title:</label>
+            <div class="col-sm-2">
+              <input type="text" class="form-control" name="message_title" id="message_title" placeholder="Enter title""/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="pwd">Message:</label>
+            <div class="col-sm-2"> 
+                <textarea class="form-control" rows="5" id="message_body" name="message_body"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group"> 
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" class="btn btn-default" value="Save" />
+            </div>
+          </div>
+
+        </form>
+
+    </body>
+</html>
+

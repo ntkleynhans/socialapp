@@ -14,5 +14,7 @@ urlpatterns = [
     url(r'^verify_credentials/$', views.verify_credentials, name='verify_credentials'),
     url(r'^logout_user/$', views.logout_user, name='logout_user'),
     url(r'^wall/$', views.wall, name='wall'),
+    url(r'^create_post/(?P<type_id>[A-Za-z]+)$', views.create_post, name='create_post'),
+    url(r'^save_post/(?P<type_id>[A-Za-z]+)$', views.save_post, name='save_post'),
 ]
 

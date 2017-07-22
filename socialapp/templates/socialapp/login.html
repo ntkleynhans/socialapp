@@ -20,6 +20,12 @@
             </div>
         {% endif %}
 
+        {% if register_message %}
+            <div class="alert alert-success">
+                <strong>{{ register_message|safe }}</strong>
+            </div>
+        {% endif %}
+
         <form action="{% url 'socialapp:verify_credentials' %}" method="post" class="form-horizontal">
             {% csrf_token %}
 

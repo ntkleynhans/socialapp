@@ -5,8 +5,12 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django import forms
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from postmanager import PostManager
+from models import Post
+from resources import generate_resource
 
 # Create your views here.
 
@@ -64,7 +68,7 @@ def register_user(request):
             user.first_name = form.cleaned_data["name"]
             user.last_name = form.cleaned_data["surname"]
             user.save()
-            return HttpResponseRedirect(reverse('socialapp:home_page', args=()))
+            return render(request, 'socialapp/login.html', {"register_message": "{} registered".format(form.cleaned_data["email"])})
         except: # Something went wrong
             return render(request, 'socialapp/register.html', {"error_message": "User exists!" })
     else: # Information is not correct
@@ -111,4 +115,26 @@ def wall(request):
     """
     context = {}
     return render(request, 'socialapp/wall.html', context)
+
+def create_post(request, type_id):
+    """ Create a new post
+    """
+    context = {}
+    return render(request, 'socialapp/create_post.html', context)
+
+def save_post(request, type_id):
+    """ Save a post
+    """
+    new_post = PostManager(timezone.now(), request.user.username, generate_resource(), type_id)    
+    form = new_post.validate(request)
+    if form.is_valid():
+        new_post.create(form)
+        post = Post(post_date=new_post.post_date, user=new_post.user, resource_link=new_post.resource_link, post_type=type_id)
+        post.save()
+
+        context = {}
+        return render(request, 'socialapp/wall.html', context)
+    else:
+        return render(request, 'socialapp/create_post.html',
+            { 'error_message' : "{}".format(form.errors)})
 

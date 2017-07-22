@@ -2,6 +2,8 @@
 from __future__ import unicode_literals
 import importlib
 
+CUSTOM_POSTTYPES = "socialapp.posttypes"
+
 class Post(object):
     """ Basic Post
     """
@@ -30,11 +32,16 @@ class PostManager(object):
         """ Choose a post type based on the name from posttypes module
         """
         try:
-            module = importlib.import_module("posttypes")
+            module = importlib.import_module(CUSTOM_POSTTYPES)
             method = getattr(module, name)
             return method(self.post_date, self.user, self.resource_link)
-        else Exception as E:
+        except Exception as E:
             raise NotImplementedError(str(E))
+
+    def validate(self, request):
+        """ Validate the form for this post
+        """
+        return self.NewPost.validate(request)
 
     def create(self, form):
         """ Create the requested post
