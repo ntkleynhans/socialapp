@@ -37,6 +37,8 @@ class RegisterForm(forms.Form):
     """ User registration form
     """
     email = forms.EmailField()
+    name = forms.CharField()
+    surname = forms.CharField()
     password = forms.CharField()
     confirmpassword = forms.CharField()
 
@@ -59,14 +61,16 @@ def register_user(request):
     if form.is_valid():
         try: # Try register user
             user = User.objects.create_user(form.cleaned_data["email"], form.cleaned_data["email"], form.cleaned_data["password"])
+            user.first_name = form.cleaned_data["name"]
+            user.last_name = form.cleaned_data["surname"]
             user.save()
             return HttpResponseRedirect(reverse('socialapp:home_page', args=()))
         except: # Something went wrong
             return render(request, 'socialapp/register.html', {"error_message": "User exists!" })
     else: # Information is not correct
         return render(request, 'socialapp/register.html',
-            { 'user_email' : request.POST["email"],  'user_password' : request.POST["password"], 
-            'user_confirmpassword' : request.POST["repassword"], 'error_message' : "{}".format(form.errors)})
+            { 'user_email' : request.POST["email"],  'user_name': request.POST["name"], 'user_surname' : request.POST["surname"],
+             'user_password' : request.POST["password"], 'user_confirmpassword' : request.POST["repassword"], 'error_message' : "{}".format(form.errors)})
 
 ### LOGIN ###
 class LoginForm(forms.Form):
