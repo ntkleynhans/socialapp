@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <title> Social Media App </title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'socialapp/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'socialapp/bootstrap-theme.min.css' %}" > 
+    </head>
+    <body>
+        <h1> Home </h1>
+        <hr>
+        <a href="{% url 'socialapp:register_page' %}" class="btn btn-info" role="button">Register</a>
+        <a href="{% url 'socialapp:login_page' %}" class="btn btn-info" role="button">Login</a>
+        <hr>
+        <h2>Welcome to the Social Media App!</h2>
+        <p> Please Register a new user and login to view weather forecasts for Cape Town. </p>
+    </body>
+</html>

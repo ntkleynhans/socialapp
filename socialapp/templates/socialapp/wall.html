@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title> Social Media App </title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'socialapp/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'socialapp/bootstrap-theme.min.css' %}" > 
+    </head>
+    <body>
+        <h1> Home </h1>
+        <hr>
+        <a href="{% url 'socialapp:logout_user' %}" class="btn btn-info" role="button">Logout</a>
+        <hr>
+    </body>
+</html>
+

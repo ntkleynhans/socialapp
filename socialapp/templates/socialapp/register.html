@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <title> Social Media App </title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'socialapp/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'socialapp/bootstrap-theme.min.css' %}" > 
+    </head>
+    <body>
+        <h1> Regsiter </h1>
+        <hr>
+        <a href="{% url 'socialapp:home_page' %}" class="btn btn-info" role="button">Home</a>
+        <a href="{% url 'socialapp:login_page' %}" class="btn btn-info" role="button">Login</a>
+        <hr>
+
+        <p> Please enter a email address and password to register a new user. </p>
+
+        {% if error_message %}
+            <div class="alert alert-warning">
+                <strong>{{ error_message|safe }}</strong>
+            </div>
+        {% endif %}
+
+        <form action="{% url 'socialapp:register_user' %}" method="post" class="form-horizontal">
+            {% csrf_token %}
+
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="email">Email:</label>
+            <div class="col-sm-2">
+              <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" value="{{ user_email }}"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="pwd">Password:</label>
+            <div class="col-sm-2"> 
+              <input type="password" class="form-control" name="password" id="password" placeholder="Enter password" value="{{ user_password }}"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="pwd">Confirm Password:</label>
+            <div class="col-sm-2"> 
+              <input type="password" class="form-control" name="confirmpassword" id="confirmpassword" placeholder="Confirm password" value="{{ user_confirmpassword }}"/>
+            </div>
+          </div>
+
+          <div class="form-group"> 
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" class="btn btn-default" value="Register" />
+            </div>
+          </div>
+
+        </form>
+    </body>
+<html>
+
