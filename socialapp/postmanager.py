@@ -35,8 +35,8 @@ class PostManager(object):
         """
         try:
             module = importlib.import_module(CUSTOM_POSTTYPES)
-            method = getattr(module, name)
-            return method(self.post_date, self.user, self.resource_link, post_type)
+            method = getattr(module, post_type)
+            return method(self.post_date, self.user, self.resource_link)
         except Exception as E:
             raise NotImplementedError(str(E))
 
