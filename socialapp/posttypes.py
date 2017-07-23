@@ -4,6 +4,8 @@ from postmanager import Post
 from resources import Resource
 from django import forms
 
+# Module containing the defined module types
+
 class MessageForm(forms.Form):
     """ Message Post form
     """
@@ -20,7 +22,7 @@ class MessagePost(Post):
         self.resource = None
 
     def validate(self, request):
-        """ Validate the message form -- need title and message
+        """ Validate the message form -- looking for title and message
         """        
         form = MessageForm(request.POST)
         return form
@@ -29,12 +31,12 @@ class MessagePost(Post):
         """ Create a new message or open an exising message
         """
         self.resource = Resource(self.resource_link)
-        if form is None:
+        if form is None: # load an existing post resource
             self.resource.load()
             content = self.resource.content()
             self.message_title = content["message_title"]
             self.message_body = content["message_body"]
-        else:
+        else: # create a new post resource
             self.save(form.cleaned_data["message_title"], form.cleaned_data["message_body"])
 
     def save(self, title, body):

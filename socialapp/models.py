@@ -13,6 +13,7 @@ class Post(models.Model):
             post date - when the post was created
             user - the user who created the post
             resource_link - file name to JSON data object
+            post_type - the post type
     """
     post_date = models.DateTimeField('published date')
     user = models.CharField(max_length=32)
@@ -20,10 +21,12 @@ class Post(models.Model):
     post_type = models.CharField(max_length=32)
 
     class Meta:
+        """ Order the posts by the post date
+        """
         ordering = ("-post_date",)
 
     def __str__(self):
-        """ Post display
+        """ How to display the post in a user readable string
         """
         return "{} -- {} -- {}".format(self.user, self.post_type, self.post_date.strftime("%A, %d %B %Y"))
 

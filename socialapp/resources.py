@@ -6,6 +6,7 @@ import os
 import json
 import codecs
 
+# TODO: hard coded??
 DATA_DIR = "socialapp/storage"
 
 def generate_resource():
@@ -13,10 +14,10 @@ def generate_resource():
     """
     return os.path.join(DATA_DIR, base64.b64encode(str(uuid.uuid4())))
 
-
 class Resource(object):
-    """ Handle file system resources
-        Each Post has an associated resource
+    """ Handle filesystem resources
+        Each Post has an associated resource that is
+        stored on the filesystem not in the db 
     """
     def __init__(self, name):
         self.fname = name
@@ -36,7 +37,7 @@ class Resource(object):
         self.data = payload
 
     def delete(self):
-        """ Remove resource
+        """ Remove resource & clear
         """
         os.remove(self.fname)
         self.fname = None
@@ -51,5 +52,4 @@ class Resource(object):
         """ Return the resource name
         """
         return self.fname
-
 

@@ -22,24 +22,26 @@ class Post(object):
         raise NotImplementedError("Delete method missing")
 
 class PostManager(object):
-    def __init__(self, post_date, user, resource_link, name):
+    def __init__(self, post_date, user, resource_link, post_type):
+        # Every post has the data i.e. the post db entry
         self.post_date = post_date
         self.user = user
         self.resource_link = resource_link
-        self.NewPost = self.choose_post(name)
+        self.post_type = post_type
+        self.NewPost = self.choose_post(post_type)
 
-    def choose_post(self, name):
-        """ Choose a post type based on the name from posttypes module
+    def choose_post(self, post_type):
+        """ Choose a post type based on the name and dynamically load from posttypes module
         """
         try:
             module = importlib.import_module(CUSTOM_POSTTYPES)
             method = getattr(module, name)
-            return method(self.post_date, self.user, self.resource_link)
+            return method(self.post_date, self.user, self.resource_link, post_type)
         except Exception as E:
             raise NotImplementedError(str(E))
 
     def validate(self, request):
-        """ Validate the form for this post
+        """ Validate the form data for this post
         """
         return self.NewPost.validate(request)
 
@@ -49,5 +51,4 @@ class PostManager(object):
         # TODO: Not sure this is actually how it is done for factories!!
         self.NewPost.create(form)
         return self.NewPost
-
 

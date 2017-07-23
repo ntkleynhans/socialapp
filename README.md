@@ -1,10 +1,39 @@
 # Social media community app
 
-## The app
+## Quickstart
+
+Clone Social App source:
+
+```bash
+$  git clone https://github.com/ntkleynhans/socialapp.git
+```
+
+Create Python virtual environment:
+
+```bash
+$ virtualenv env
+```
+Use new Python virtual environment:
+
+```bash
+source env/bin/activate
+```
+
+Install Python Django:
+```
+pip install django
+```
+
+
+
+
+
+## INITIAL IDEAS
+### The app
 
 Create a Twitter/Reddit clone -- user posts a message and community can comment
 
-## Design
+### Design
 
 My app revolves are the idea of a generic user `Post`.
 
@@ -26,7 +55,7 @@ Main class -- `Resource` -- with inherited classes:
 
 Recursively populate messages, comments and delete comments
 
-## Views
+### Views
 
  * Home page -- login button, register button
  * Login -- form: username(email) & password, login button, navigation bar
@@ -35,7 +64,7 @@ Recursively populate messages, comments and delete comments
  * Main post wall (pageinated) -- form: table of posts, add message, delete message, navigation bar
  * Message detail + commments -- form: message & table of comments, navigation bar
 
-## Thoughts
+### Thoughts
 
 Nice to haves:
 

@@ -11,7 +11,7 @@
         <a href="{% url 'socialapp:logout_user' %}" class="btn btn-info" role="button">Logout</a>
         <a href="{% url 'socialapp:wall' %}" class="btn btn-info" role="button">Cancel</a>
         <hr>
-
+        <p> Please add a title and message for this post.</p>
         {% if error_message %}
             <div class="alert alert-warning">
                 <strong>{{ error_message|safe }}</strong>
