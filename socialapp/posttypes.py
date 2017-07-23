@@ -52,12 +52,12 @@ class MessagePost(Post):
         self.message_body = None
         self.resource = None
 
-    def message_title(self):
+    def post_title(self):
         """ Return the message title
         """
         return self.message_title
 
-    def message_body(self):
+    def post_body(self):
         """ Return the message text body
         """
         return self.message_body

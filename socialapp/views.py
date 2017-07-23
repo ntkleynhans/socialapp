@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django import forms
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 from postmanager import PostManager
 from models import Post
 from resources import generate_resource
@@ -113,28 +115,94 @@ def logout_user(request):
 def wall(request):
     """ A message wall showing existing messages
     """
-    context = {}
-    return render(request, 'socialapp/wall.html', context)
+    if request.user.is_authenticated:
+        posts_list = Post.objects.all()
+        #posts_with_title = []
+        for post in posts_list:
+            old_post = PostManager(post.post_date, post.user, post.resource_link, post.post_type)
+            old_post = old_post.create(None)
+            post.title = old_post.post_title()
+            #posts_with_title.append(post)
+
+        paginator = Paginator(posts_list, 5) # Show 5 posts per page
+
+        page = request.GET.get('page')
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            posts = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            posts = paginator.page(paginator.num_pages)
+
+        return render(request, 'socialapp/wall.html', {'posts': posts})
+    else:
+        return HttpResponseRedirect(reverse('socialapp:login_page', args=()))
 
 def create_post(request, type_id):
     """ Create a new post
     """
-    context = {}
-    return render(request, 'socialapp/create_post.html', context)
+    if request.user.is_authenticated:
+        context = {}
+        return render(request, 'socialapp/create_post.html', context)
+    else:
+        return HttpResponseRedirect(reverse('socialapp:login_page', args=()))
 
 def save_post(request, type_id):
     """ Save a post
     """
-    new_post = PostManager(timezone.now(), request.user.username, generate_resource(), type_id)    
-    form = new_post.validate(request)
-    if form.is_valid():
-        new_post.create(form)
-        post = Post(post_date=new_post.post_date, user=new_post.user, resource_link=new_post.resource_link, post_type=type_id)
-        post.save()
+    if request.user.is_authenticated:
+        new_post = PostManager(timezone.now(), request.user.username, generate_resource(), type_id)    
+        form = new_post.validate(request)
+        if form.is_valid():
+            new_post.create(form)
+            post = Post(post_date=new_post.post_date, user=new_post.user, resource_link=new_post.resource_link, post_type=type_id)
+            post.save()
 
-        context = {}
-        return render(request, 'socialapp/wall.html', context)
+            return HttpResponseRedirect(reverse('socialapp:wall', args=()))
+        else:
+            return render(request, 'socialapp/create_post.html',
+                { 'error_message' : "{}".format(form.errors)})
     else:
-        return render(request, 'socialapp/create_post.html',
-            { 'error_message' : "{}".format(form.errors)})
+        return HttpResponseRedirect(reverse('socialapp:login_page', args=()))
+
+def post_detail(request, pk):
+    """ Display the posts' details
+    """
+    if request.user.is_authenticated:
+        post = get_object_or_404(Post, pk=pk)
+        old_post = PostManager(post.post_date, post.user, post.resource_link, post.post_type)
+        old_post = old_post.create(None)
+
+        users = User.objects.all()
+        qset = users.filter(email=post.user)
+        full_name = post.user
+        if len(qset) != 0:
+            full_name = "{} {}".format(qset[0].first_name, qset[0].last_name)
+
+        delete_disabled = ""
+        if request.user.username != post.user:
+            delete_disabled = "disabled"
+
+        message = {"message_id" : post.id, "message_date" : post.post_date, "message_user" : full_name,
+            "message_title" : old_post.post_title, "message_body" : old_post.post_body, "delete_disabled" : delete_disabled}
+
+        return render(request, 'socialapp/post_detail.html', message)
+    else:
+        return HttpResponseRedirect(reverse('socialapp:login_page', args=()))
+
+def delete_post(request, pk):
+    """ Delete a new post
+    """
+    if request.user.is_authenticated:
+        post = get_object_or_404(Post, pk=pk)
+        old_post = PostManager(post.post_date, post.user, post.resource_link, post.post_type)
+        old_post = old_post.create(None)
+        old_post.delete()
+        post.delete()
+
+        return HttpResponseRedirect(reverse('socialapp:wall', args=()))
+    else:
+        return HttpResponseRedirect(reverse('socialapp:login_page', args=()))
 

@@ -50,3 +50,4 @@ class PostManager(object):
         self.NewPost.create(form)
         return self.NewPost
 
+

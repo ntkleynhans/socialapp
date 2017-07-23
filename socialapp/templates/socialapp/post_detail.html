@@ -1,0 +1,70 @@
+<html>
+    <head>
+        <title> Social Media App </title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'socialapp/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'socialapp/bootstrap-theme.min.css' %}" >
+
+        <script type="text/javascript">
+ 
+            function confirm_delete() {
+                result = confirm("Are you sure you want to delete this Post?");
+                if(result == true) {
+                    window.location.href = "{% url 'socialapp:delete_post' pk=message_id %}";
+                } else {
+                    return false;
+                }
+            }
+        </script>
+
+    </head>
+    <body>
+        <h1> Create Post </h1>
+        <hr>
+        <a href="{% url 'socialapp:logout_user' %}" class="btn btn-info" role="button">Logout</a>
+        <a href="{% url 'socialapp:wall' %}" class="btn btn-info" role="button">Cancel</a>
+        <hr>
+
+        {% if error_message %}
+            <div class="alert alert-warning">
+                <strong>{{ error_message|safe }}</strong>
+            </div>
+        {% endif %}
+
+          <div class="row form-group">
+            <label class="control-label col-sm-2" for="title">Date:</label>
+            <div class="col-sm-2">
+              <input type="text" class="form-control" value="{{ message_date }}" disabled/>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <label class="control-label col-sm-2" for="title">User:</label>
+            <div class="col-sm-2">
+              <input type="text" class="form-control" value="{{ message_user }}" disabled/>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <label class="control-label col-sm-2" for="title">Title:</label>
+            <div class="col-sm-2">
+              <input type="text" class="form-control" value="{{ message_title }}" disabled/>
+            </div>
+          </div>
+
+          <div class="row form-group">
+            <label class="control-label col-sm-2" for="pwd">Message:</label>
+            <div class="col-sm-6"> 
+                <textarea class="form-control" rows="5" readonly> {{ message_body }} </textarea>
+            </div>
+          </div>
+
+          <div class="row form-group"> 
+            <div class="col-sm-offset-2 col-sm-10">
+                <input {{ delete_disabled }} onclick="confirm_delete()" type="submit" class="btn btn-default" value="Delete" />
+            </div>
+          </div>
+
+    </body>
+</html>
+

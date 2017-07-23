@@ -19,6 +19,11 @@ class Post(models.Model):
     resource_link = models.CharField(max_length=128)
     post_type = models.CharField(max_length=32)
 
+    class Meta:
+        ordering = ("-post_date",)
+
     def __str__(self):
+        """ Post display
+        """
         return "{} -- {} -- {}".format(self.user, self.post_type, self.post_date.strftime("%A, %d %B %Y"))
 
